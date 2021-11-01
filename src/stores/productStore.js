@@ -10,7 +10,14 @@ class ProductStore {
 
   createProduct = async (newProduct) => {
     try {
-      const response = await instance.post("/products", newProduct);
+      //creating form data, FormData is a pre defined class in js
+      const formData = new FormData();
+      for (const key in newProduct) {
+        formData.append(key, newProduct[key]);
+      }
+      // products is the path, formData is the body that is how i send it to
+      // backend and multer will handle it
+      const response = await instance.post("/products", formData);
       this.products.push(response.data);
     } catch (error) {
       console.log(
@@ -29,9 +36,9 @@ class ProductStore {
     }
   };
 
-  updateProduct = async (updatedProduct, productId) => {
+  updateProduct = async (formData, productId) => {
     try {
-      const res = await instance.put(`/products/${productId}`, updatedProduct);
+      const res = await instance.put(`/products/${productId}`, formData);
       this.products = this.products.map((product) =>
         product._id === productId ? res.data : product
       );
