@@ -36,8 +36,12 @@ class ProductStore {
     }
   };
 
-  updateProduct = async (formData, productId) => {
+  updateProduct = async (updateProduct, productId) => {
     try {
+      const formData = new FormData();
+      for (const key in updateProduct) {
+        formData.append(key, updateProduct[key]);
+      }
       const res = await instance.put(`/products/${productId}`, formData);
       this.products = this.products.map((product) =>
         product._id === productId ? res.data : product
